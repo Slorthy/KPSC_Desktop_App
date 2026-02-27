@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Fade Transition Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+        }
+        video {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px 0;
+            opacity: 0; /* Start invisible */
+            transition: opacity 0.5s ease-in-out; /* Smooth fade transition */
+        }
+        .test-info {
+            background: #333;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fade Transition Video Test</h1>
+    
+    <div class="test-info">
+        <h3>Fade Effects Implementation</h3>
+        <p class="success">✓ CSS transition: opacity 0.5s ease-in-out</p>
+        <p class="success">✓ Video starts with opacity: 0</p>
+        <p class="success">✓ JavaScript fade in: opacity 0 → 1</p>
+        <p class="success">✓ JavaScript fade out: opacity 1 → 0</p>
+        <p class="success">✓ Hide after fade completes (500ms delay)</p>
+    </div>
+
+    <div class="test-info">
+        <h3>Test Controls</h3>
+        <button onclick="testFadeIn()">Test Fade In</button>
+        <button onclick="testFadeOut()">Test Fade Out</button>
+        <button onclick="testFullTransition()">Test Full Transition</button>
+        <button onclick="resetVideo()">Reset Video</button>
+    </div>
+    
+    <video id="testVideo" controls>
+        <source src="./public/Media/Transition_Video/KPSC_Honour_Board_Transition_Video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <div id="status" class="test-info">Ready to test fade effects...</div>
+
+    <script>
+        const video = document.getElementById('testVideo');
+        const status = document.getElementById('status');
+        
+        function updateStatus(message, isError = false) {
+            status.innerHTML = `<p class="${isError ? 'error' : 'success'}">${message}</p>`;
+        }
+        
+        function testFadeIn() {
+            updateStatus('Testing fade in effect...');
+            video.style.display = 'block';
+            video.style.opacity = '0';
+            video.play().then(() => {
+                setTimeout(() => {
+                    video.style.opacity = '1';
+                    updateStatus('✓ Fade in complete - video should now be visible');
+                }, 50);
+            }).catch(error => {
+                updateStatus('✗ Error playing video: ' + error.message, true);
+            });
+        }
+        
+        function testFadeOut() {
+            updateStatus('Testing fade out effect...');
+            video.style.opacity = '0';
+            setTimeout(() => {
+                video.style.display = 'none';
+                video.pause();
+                updateStatus('✓ Fade out complete - video should now be hidden');
+            }, 500);
+        }
+        
+        function testFullTransition() {
+            updateStatus('Testing complete fade in/out transition...');
+            
+            // Start with fade in
+            video.style.display = 'block';
+            video.style.opacity = '0';
+            video.currentTime = 0;
+            video.play().then(() => {
+                setTimeout(() => {
+                    video.style.opacity = '1';
+                    updateStatus('✓ Fade in complete...');
+                    
+                    // Auto fade out after 3 seconds
+                    setTimeout(() => {
+                        video.style.opacity = '0';
+                        updateStatus('✓ Fade out started...');
+                        
+                        setTimeout(() => {
+                            video.style.display = 'none';
+                            video.pause();
+                            updateStatus('✓ Full transition test complete!');
+                        }, 500);
+                    }, 3000);
+                }, 50);
+            }).catch(error => {
+                updateStatus('✗ Error: ' + error.message, true);
+            });
+        }
+        
+        function resetVideo() {
+            video.style.display = 'none';
+            video.style.opacity = '0';
+            video.pause();
+            video.currentTime = 0;
+            updateStatus('Video reset - ready for next test');
+        }
+        
+        // Initialize
+        resetVideo();
+    </script>
+</body>
+</html>

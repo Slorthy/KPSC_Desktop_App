@@ -1,0 +1,204 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>KPSC Desktop Display App</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 900px;
+        height: 700px;
+        overflow: hidden;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        width: 900px;
+        height: 700px;
+        background: linear-gradient(135deg, #662537 0%, #151A90 100%);
+        box-sizing: border-box;
+      }
+
+      .app-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: transparent;
+        overflow: hidden;
+      }
+
+      .header-ribbon {
+        width: 100%;
+        height: 80px;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
+      }
+      
+      .logo-container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .logo {
+        height: 50px;
+        width: auto;
+        object-fit: contain;
+      }
+      
+      .site-title {
+        color: #333;
+        margin: 0;
+        font-size: 20px; 
+        font-weight: bold;
+        line-height: 1.2;
+      }
+      
+      .window-controls {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        display: flex;
+        gap: 8px;
+        z-index: 1001;
+      }
+      
+            
+      .window-btn {
+        width: 30px;
+        height: 30px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background: #f0f0f0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        transition: background-color 0.2s ease;
+      }
+      
+      .window-btn:hover {
+        background: #e0e0e0;
+      }
+      
+      .window-btn.minimize::before {
+        content: "_";
+        margin-bottom: 5px;
+      }
+      
+      .window-btn.close {
+        color: #ff4444;
+      }
+      
+      .window-btn.close:hover {
+        background: #ffdddd;
+      }
+      
+      .mp-gallery {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 15px;
+        padding: 15px;
+        height: calc(100vh - 130px);
+        margin-top: 130px;
+      }
+      .mp-gallery-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .mp-gallery-item img {
+        display: block;
+        transition: transform 0.4s ease;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      .mp-gallery-item:hover img {
+        transform: scale(1.08);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <header class="header-ribbon">
+        <div class="window-controls">
+          <button id="minimizeBtn" class="window-btn minimize" title="Minimize"></button>
+          <button id="closeBtn" class="window-btn close" title="Close">×</button>
+        </div>
+        <div class="logo-container">
+          <img src="./Media/Button Images/KPSC_Logo.webp" alt="KPSC Logo" class="logo">
+        </div>
+      </header>
+
+      <div class="mp-gallery">
+        <div class="mp-gallery-item">
+          <img id="viewPhotoBoardImage" src="./Media/Button Images/View_Photo_Board_Button_Photo.png" alt="View Photos MP">
+        </div>
+        <div class="mp-gallery-item">
+          <img id="viewHonourBoardImage" src="./Media/Button Images/View_Honour_Board_Button_Photo.png" alt="Start Transition Video MP">
+        </div>
+        <div class="mp-gallery-item">
+          <img id="editPhotoBoardImage" src="./Media/Button Images/Edit_Photo_Board_Button_Photo.png" alt="Edit Photos MP">
+        </div>
+        <div class="mp-gallery-item">
+          <img id="editHonourBoardImage" src="./Media/Button Images/Edit_Honour_Board_Button_Photo.png" alt="Edit Board MP">
+        </div>
+      </div>
+    </div>
+    <script type="module" src="./src/renderer.js"></script>
+    <script>
+      // SmartObject-like image enhancement
+      document.addEventListener('DOMContentLoaded', () => {
+        const images = document.querySelectorAll('.mp-gallery-item img');
+        
+        images.forEach(img => {
+          // Create high-quality canvas rendering
+          const enhanceImage = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas to double resolution for retina displays
+            const scale = window.devicePixelRatio || 1;
+            canvas.width = img.naturalWidth * scale;
+            canvas.height = img.naturalHeight * scale;
+            canvas.style.width = img.width + 'px';
+            canvas.style.height = img.height + 'px';
+            
+            // Enable high-quality rendering
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            
+            // Draw image with enhanced quality
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            // Apply subtle sharpening filter
+            ctx.filter = 'contrast(1.1) brightness(1.05) saturate(1.05)';
+            ctx.drawImage(canvas, 0, 0);
+          };
+          
+          // Enhance when image loads
+          if (img.complete) {
+            enhanceImage();
+          } else {
+            img.addEventListener('load', enhanceImage);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPSC Desktop Display App</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #662537 0%, #151A90 100%);
+            width: 750px;
+            height: 620px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        body::-webkit-scrollbar { display: none; }
+        .title-bar { display: none !important; }
+        .header-ribbon {
+            width: 100%;
+            height: 80px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-app-region: drag;
+            user-select: none;
+        }
+
+        .logo-container {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .window-controls {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            gap: 8px;
+            z-index: 1001;
+            -webkit-app-region: no-drag;
+        }
+        
+        .window-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background: #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .window-btn.close { color: #ff4444; }
+
+        .mp-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 10px;
+            padding: 25px;
+            height: calc(620px - 80px - 50px);
+            margin-top: 120px;
+            width: calc(750px - 50px);
+        }
+
+        .mp-gallery-item {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            height: 190px;
+        }
+
+        .mp-gallery-item img {
+            display: block;
+            transition: transform 0.4s ease;
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .mp-gallery-item:hover img {
+            transform: scale(1.08);
+        }
+    </style>
+</head>
+<body>
+    <header class="header-ribbon">
+        <div class="logo-container">
+            <img src="./Media/Button Images/KPSC_Logo.webp" alt="KPSC Logo" class="logo">
+        </div>
+        <div class="window-controls">
+            <button id="closeBtn" class="window-btn close" title="Close">×</button>
+        </div>
+    </header>
+    
+    <div class="mp-gallery">
+        <div class="mp-gallery-item" onclick="openGallery('Football')">
+            <img src="./Media/Button Images/Football_Button_Photo.png" alt="Football">
+        </div>
+        <div class="mp-gallery-item" onclick="openGallery('Random_Photos_All_Sports')">
+            <img src="./Media/Button Images/AllPhotos_Button_Photo.png" alt="All Photos">
+        </div>
+        <div class="mp-gallery-item" onclick="openGallery('Cricket')">
+            <img src="./Media/Button Images/Cricket_Button_Photo.png" alt="Cricket">
+        </div>
+        <div class="mp-gallery-item" onclick="openGallery('Netball')">
+            <img src="./Media/Button Images/Netball_Button_Photo.png" alt="Netball">
+        </div>
+        <div class="mp-gallery-item" onclick="openGallery('Softball')">
+            <img src="./Media/Button Images/Softball_Button_Photo.png" alt="Softball">
+        </div>
+        <div class="mp-gallery-item" onclick="openGallery('Baseball')">
+            <img src="./Media/Button Images/Baseball_Button_Photo.png" alt="Baseball">
+        </div>
+    </div>
+
+    <script>
+        // Use an event listener to ensure window.api (from preload.js) is ready
+        window.addEventListener('DOMContentLoaded', () => {
+            const api = window.api;
+
+            // Fix for the Close Button
+            const closeBtn = document.getElementById('closeBtn');
+            if (closeBtn) {
+                closeBtn.onclick = async () => {
+                    if (api && api.closeWindow) {
+                        await api.closeWindow();
+                    }
+                };
+            }
+
+            // Fix for the Gallery Buttons (Mapped to window so 'onclick' can find it)
+            window.openGallery = async (sportName) => {
+                if (!api) {
+                    console.error("Bridge not found");
+                    return;
+                }
+                try {
+                    const result = await api.getImagesFromFolder(sportName);
+                    if (result && result.success && result.images.length > 0) {
+                        await api.openFullscreenImageViewer(result.images, 0);
+                    } else {
+                        alert("No photos found in: KPSC_DATA/Club_Photos/" + sportName);
+                    }
+                } catch (err) {
+                    console.error("Error opening gallery:", err);
+                }
+            };
+
+            // F2 Shortcut
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'F2' && api && api.closeWindow) {
+                    api.closeWindow();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
