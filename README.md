@@ -107,6 +107,8 @@ This software and its source code are the proprietary property of the software d
 - **Club**: Kissing Point Sports Club
 - **Developer**: Ben Swinbourne
 - **Email**: ben.swinbourne@gmail.com
+- **Project Lead & Graphic Designer**: Brad Callender
+- **Email**: bradcallender745@gmail.com
 
 ## Acknowledgments
 
