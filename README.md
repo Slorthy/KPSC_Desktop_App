@@ -2,6 +2,10 @@
 
 A modern desktop application for Kissing Point Sports Club (KPSC) designed to display honour board information and manage club media content.
 
+## Team
+- Brad Callender - Project Lead & Graphic Designer - bradcallender745@gmail.com
+- Benjamin Swinbourne - Software Developer - ben.swinbourne@gmail.com
+
 ## Features
 
 - **Photo Board Display**: Browse and display club photos with an intuitive interface
