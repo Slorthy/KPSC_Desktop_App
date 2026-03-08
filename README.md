@@ -39,7 +39,13 @@ npm install
 
 3. Start the application:
 ```bash
-npm start
+npm package
+```
+
+OR
+
+```bash
+npm make
 ```
 
 ### Photo Board
@@ -53,7 +59,7 @@ npm start
 - Scrolling Functionality is handled automatically. Depending on the TV the scrolling buffer may vary.
 
 ### Fullscreen Mode
-- Press BACKSPACE to exit Fullscreen Mode or F2 to completely close the application
+- Press BACKSPACE to exit Fullscreen Mode for each board / viewer or F2 to completely close the application
 
 ### Project Structure
 ```
@@ -113,5 +119,5 @@ This software and its source code are the proprietary property of the software d
 ## Acknowledgments
 
 - Kissing Point Sports Club for the opportunity to develop this application
-- The Electron community for excellent documentation and tools
-- All club members who contribute photos and content
+- The Electron community for excellent documentation and support
+- Brad for designing the UI and adapting to changing requirements
